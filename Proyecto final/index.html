@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+      .error {
+          background-color:#EFC9C1;
+
+      }
+      form{
+          margin-top: 200px;
+          margin: 0 auto;
+          /*border-radius: 10px;
+          border: 1px solid #666666;*/
+          width: 600px;
+      }
+      legend{
+        margin-left: 250px;
+      }
+
+      #centrado{
+        margin-left: 239px;
+      }
+      #centrado input{
+        width: 200px;
+        margin-left: -65px;
+      }
+      .btn-primary{
+        background-color: #6d7fcc;
+        border: 0 ;
+      }
+      #padre{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .x{
+        width: fit-content;
+        margin-top: -31px;
+      }
+      #volver1{
+        margin-left: 90%;
+        background-color: #FAAC58;
+        border: 0;
+        /*display: block;*/
+      }
+    </style>
+    <title>Home</title>
+
+</head>
+<body>
+  <div style="background-color: #6d7fcc;"class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">Gestor de eventos</h1>
+      <p class="lead">La mejor aplicación en el mercado para gestionar tus eventos escolares.</p>
+    </div>
+  </div>
+  <section>
+    <form id="login" class="form-horizontal">
+        <fieldset>
+        
+        <!-- Form Name -->
+        <legend>Login</legend>
+        
+        <!-- Text input-->
+        <div id="centrado">
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="textinput">Usuario</label>  
+          <div class="col-md-4">
+          <input id="nombre1" name="textinput" type="text" placeholder="" class="form-control input-md">
+            
+          </div>
+        </div>
+        
+        <!-- Password input-->
+        
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="passwordinput">Contraseña</label>
+          <div class="col-md-4">
+            <input id="password1" name="passwordinput" type="password" placeholder="" class="form-control input-md">
+            
+          </div>
+        </div>
+      </div>
+
+        <div id="padre">
+        <!-- Button -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="acceso"></label>
+          <div class="col-md-4">
+            <input id="acceso" type="button"name="acceso" class="btn btn-primary" value="Acceder"/>
+          </div>
+        </div>
+        
+        <!-- Button -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="registro"></label>
+          <div class="col-md-4">
+            <input id="registro" type="button" name="registro" class="btn btn-primary" value="Registrarse"/>
+          </div>
+        </div>
+        
+        <!-- Button -->
+        <div class="form-group">
+          <label class="col-md-4 control-label" for="verActividades"></label>
+          <div class="col-md-4">
+            <input type="button" style="width: 150px;" id="verActividades" name="verActividades" class="btn btn-primary" value="Ver actividades"/>
+          </div>
+        </div>
+      </div>
+        
+        </fieldset>
+    </form>
+  </section>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/index.js " language="javascript" type="text/javascript"></script>
+</body>
+</html>
