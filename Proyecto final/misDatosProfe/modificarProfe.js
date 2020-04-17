@@ -17,8 +17,8 @@ let datosProfe = JSON.parse(sessionStorage.getItem("profesor"));
 $("#dni1")[0].value = datosProfe.dni;
 $("#nombre1")[0].value = datosProfe.nombre;
 $("#apellidos1")[0].value = datosProfe.apellidos;
-$("#cuerpo1")[0].value = datosProfe.cuerpo;
-$("#email1")[0].value = datosProfe.email;
+$("#cuerpo1")[0].value = datosProfe.idCuerpo;
+$("#email1")[0].value = datosProfe.mail;
 $("#colegio1")[0].value = datosProfe.colegio;
 $("#contrasena")[0].value = datosProfe.contrasena;
 
@@ -113,8 +113,8 @@ function pulsarModificar(){
             dni:dni,
             nombre:nombre,
             apellidos:apellidos,
-            cuerpo:cuerpo,
-            email:email,
+            idCuerpo:cuerpo,
+            mail:email,
             colegio:colegio,
             contrasena:contrasena1
         };
