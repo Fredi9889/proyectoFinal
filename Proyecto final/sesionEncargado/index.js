@@ -65,9 +65,9 @@ function anadir(){
 
     // Verifico si ya he cargado el formulario antes
     if ($('#formNuevaActividad').length == 0) {
-        $("<div>").appendTo('#content').load("../misDatosProfe/index.html",
+        $("<div>").appendTo('#content').load("../nuevaActividad/index.html",
             function() {
-                $.getScript("../misDatosProfe/modificarProfe.js");
+                $.getScript("../nuevaActividad/index.js");
             });
     }else{
         // Lo muestro si está oculto
@@ -86,6 +86,7 @@ function respuestaVerActividades(datos){
             cartas.forEach(hijo=>{
                 hijo.remove();
             });
+            $(".share").hide("normal");
        }else{
         $(".share").show("normal");
             /*let divBotonAnadir = document.createElement("div");
@@ -104,6 +105,7 @@ function respuestaVerActividades(datos){
 
                 let div2 = document.createElement("div");
                 div2.classList.add("card");
+                div2.classList.add("h-100");
                 let imagen = document.createElement("img");
                 imagen.classList.add("img-fluid");
                 switch(element.idTipo){
