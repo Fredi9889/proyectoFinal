@@ -1,18 +1,12 @@
-//Función para cargar el numerito de "mis actividades"
-window.onload = function(){
-    let datosProfe = JSON.parse(sessionStorage.getItem("profesor"));
-    $.get("getNumeroAct.php", {dniProfe : datosProfe.dni}, function(datos){
-        $(".badge-light")[0].textContent = datos.suma;
-    }, 'json');
-    
-}
 $(document).ready(function () {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
         $(this).toggleClass('active');
     });
+    $(".share").hide();
+
 });
-if(sessionStorage.getItem("profesor") == null){
+if(sessionStorage.getItem("encargado") == null){
     window.open("../index.html", "_self");
 }
 
@@ -20,15 +14,15 @@ if(sessionStorage.getItem("profesor") == null){
 $('a[href="../index.html"]').click(function(){
     sessionStorage.clear();
 });
-$("#verActividades").click(verActividades);
+$("#actividades").click(actividades);
 $("#misActividades").click(misActividades);
 $("#misDatos").click(misDatos);
-function verActividades(){
+function actividades(){
     //Ocultar lo que haya por ahí
     $("form").hide("normal");
     //Cagar las actividades
     $.ajax({
-        url: "getActividades.php",
+        url: "../sesionProfesor/getActividades.php",
         type: "get",
         async: true,
         data: null,
@@ -56,15 +50,24 @@ function verActividades(){
 
 function respuestaVerActividades(datos){
         //Si esta activado hay que borrar u ocultar las cartas
-        if($("#content")[0].querySelectorAll(".parrafo").length != 0){
+        /*if($("#content")[0].querySelectorAll(".parrafo").length != 0){
             $("#content")[0].querySelectorAll(".parrafo")[0].remove();
-        }
+        }*/
         let cartas = document.querySelectorAll('.card-columns > *');
         if(cartas.length > 0){
             cartas.forEach(hijo=>{
                 hijo.remove();
             });
        }else{
+        $(".share").show("normal");
+            /*let divBotonAnadir = document.createElement("div");
+            divBotonAnadir.classList.add("share");
+            let i = document.createElement("i");
+            i.classList.add("fa");
+            i.classList.add("fa-plus");
+            divBotonAnadir.appendChild(i);
+            $("#content")[0].appendChild(divBotonAnadir);
+            */
             let contenedor = $(".card-columns")[0];
             datos.datos.forEach(element => {
                 let div1 = document.createElement("div");
