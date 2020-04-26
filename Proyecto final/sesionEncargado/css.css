@@ -6,15 +6,14 @@
 /*@import url("../fuentes/pxiByp8kv8JHgFVrLDz8Z1xlFQ.woff2");*/
 /*@import url("../fuentes/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2");*/
 /*@import url("../fuentes/pxiEyp8kv8JHgFVrJJfecg.woff2");*/
-  
 .share{
     display:block;
     width:60px;
     height:60px;
-    background:#ff9100;
+    background:#FAAC58;
     position:absolute;
-    top:300px;
-    left:50%;
+    top:50px;
+    left:94%;
     z-index:999;
     text-align:center;
     overflow:hidden;
@@ -37,7 +36,9 @@ body {
     font-family: "Poppins" ,  sans-serif;
     background: #fafafa;
 }
-
+.error {
+    background-color:#EFC9C1;
+}
 p {
     font-family: "Poppins" , sans-serif;
     font-size: 1.1em;
