@@ -47,6 +47,34 @@ function actividades(){
         </div>
     </div>
 </div>*/
+$(".share").click(anadir);
+function anadir(){
+    //Ver mis datos
+    //Ocultar lo que haya por ahí
+
+    let cartas = document.querySelectorAll('.card-columns > *');
+    if(cartas.length > 0){
+        cartas.forEach(hijo=>{
+            hijo.remove();
+        });
+    }
+    //Cargar el formulario
+    // Oculto todos los formularios menos este
+    $("form:not('#formNuevaActividad')").hide("normal");
+    $(".share").hide("normal");
+
+    // Verifico si ya he cargado el formulario antes
+    if ($('#formNuevaActividad').length == 0) {
+        $("<div>").appendTo('#content').load("../misDatosProfe/index.html",
+            function() {
+                $.getScript("../misDatosProfe/modificarProfe.js");
+            });
+    }else{
+        // Lo muestro si está oculto
+        $('#formNuevaActividad').show("normal");
+    }
+}
+    
 
 function respuestaVerActividades(datos){
         //Si esta activado hay que borrar u ocultar las cartas
