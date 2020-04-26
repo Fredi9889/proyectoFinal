@@ -167,7 +167,7 @@ function respuestaVerActividades(datos){
                 let a = document.createElement("a");
                 a.classList.add("btn");
                 a.classList.add("btn-primary");
-                a.textContent = "Inscribirse";
+                a.textContent = "Modificar actividad";
                 a.classList.add("inscribirse");
                 a.dataset.idActividad = element.idAct;
                 ul.appendChild(li1);
@@ -181,28 +181,52 @@ function respuestaVerActividades(datos){
             });
             let btnInscribirse = document.querySelectorAll('.inscribirse');
             btnInscribirse.forEach(boton=>{
-                boton.addEventListener("click", fInscribirse);
+                boton.addEventListener("click", fModificar);
             });
         
        }
-function fInscribirse(oEvento){
+function fModificar(oEvento){
     var oE = oEvento || window.event;
-    //Hacer un post enviando el dni del profesor y el id de la actividad
+    //Id de actividad
     let idAct = oE.target.dataset.idActividad;
-    let datosProfe = JSON.parse(sessionStorage.getItem("profesor"));
     $.ajax({
-        url: "postInscripcion.php",
-        method: "POST",
+        url: "getActividadPorId.php",
+        method: "GET",
         async: true,
         success: function(datos){
-            alert(datos.mensaje);
-            if(datos.datos != undefined){
-                $(".badge-light")[0].textContent = datos.datos;
+            //guardar el id en el localStorage
+            localStorage.setItem('idAct', datos.idAct);
+            let cartas = document.querySelectorAll('.card-columns > *');
+            if(cartas.length > 0){
+                cartas.forEach(hijo=>{
+                    hijo.remove();
+                });
+                $(".share").hide("normal");
+            }
+            //Cargar el formulario
+            // Oculto todos los formularios menos este
+            $("form:not('#formModificarActividad')").hide("normal");
+
+            // Verifico si ya he cargado el formulario antes
+            if ($('#formModificarActividad').length == 0) {
+                $("<div>").appendTo('#content').load("../modificarActividad/index.html",
+                    function() {
+                        $.getScript("../modificarActividad/index.js");
+                    });
+            }else{
+                // Lo muestro si está oculto
+                $('#formModificarActividad').show("normal");
+                $.get("getActividadPorId.php",{idAct:idAct} ,fDeRespuesta, 'json');
+                function fDeRespuesta(datos){
+                    $("#nombreActividad")[0].value = datos.nombre;
+                    $("#tipoActividad")[0].value = datos.idTipo;
+                    $("#direccionActividad")[0].value = datos.lugar;
+                    $("#fechaActividad")[0].value = datos.fecha;
+                    $("#horaActividad")[0].value = datos.hora;
+                }
             }
         },
-        data: { idAct: idAct,
-                dniProfe: datosProfe.dni
-            },
+        data: { idAct: idAct},
         dataType : 'json'
     });
 }
@@ -237,10 +261,10 @@ function misActividades(){
     });
 }
 function respuestaMisActividades(datos){
-    let cartas = document.querySelectorAll('.card-columns > *');
-    if($("#content")[0].querySelectorAll(".parrafo").length != 0){
+    /*if($("#content")[0].querySelectorAll(".parrafo").length != 0){
         $("#content")[0].querySelectorAll(".parrafo")[0].remove();
-    }
+    }*/
+    let cartas = document.querySelectorAll('.card-columns > *');
     if(cartas.length > 0){
         cartas.forEach(hijo=>{
             hijo.remove();
