@@ -181,7 +181,7 @@ function pulsarAcceder(){
                 //Cargar la sesión de encargado y su html
                 sessionStorage.clear();
                 sessionStorage.setItem('encargado', JSON.stringify(datos.datos));
-                //window.open("sesionProfesor/index.html", "_self");
+                window.open("sesionEncargado/index.html", "_self");
             }else
             if(datos.profesor){
                 //Cargar la sesión de profesor y su html
