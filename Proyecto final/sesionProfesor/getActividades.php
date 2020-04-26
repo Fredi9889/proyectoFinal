@@ -12,7 +12,7 @@ mysqli_set_charset($conexion,"utf8");
 mysqli_query($conexion,"utf8");
 
 
-$sql = "SELECT * FROM `actividad`";
+$sql = "SELECT * FROM `actividad` order by fecha, hora";
 $resultado = mysqli_query($conexion,$sql);
 
 $arrayDatos = Array();
