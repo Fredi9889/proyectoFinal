@@ -72,6 +72,7 @@ function anadir(){
     }else{
         // Lo muestro si está oculto
         $('#formNuevaActividad').show("normal");
+        //$.getScript("../nuevaActividad/index.js");
     }
 }
     
@@ -192,7 +193,7 @@ function fModificar(oEvento){
     $.ajax({
         url: "getActividadPorId.php",
         method: "GET",
-        async: true,
+        async: false,
         success: function(datos){
             //guardar el id en el localStorage
             localStorage.setItem('idAct', datos.idAct);
@@ -212,12 +213,19 @@ function fModificar(oEvento){
                     function() {
                         $.getScript("../modificarActividad/index.js");
                     });
-                    $("#formModificarActividad").reset();
+                    //$("#formModificarActividad").reset();
             }else{
                 // Lo muestro si está oculto
                 $('#formModificarActividad').show("normal");
-                $("#formModificarActividad").reset();
-                $.get("getActividadPorId.php",{idAct:idAct} ,fDeRespuesta, 'json');
+                //$("#formModificarActividad").reset();
+                $.ajax({
+                    url: "getActividadPorId.php",
+                    method: "GET",
+                    async: false,
+                    success:fDeRespuesta,
+                    data:{idAct:idAct},
+                    dataType:'json'
+                });
                 function fDeRespuesta(datos){
                     $("#nombreActividad")[0].value = datos.nombre;
                     $("#tipoActividad")[0].value = datos.idTipo;
