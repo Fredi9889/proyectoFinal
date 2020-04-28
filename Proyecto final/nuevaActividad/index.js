@@ -1,5 +1,5 @@
 "use strict";
-//# sourceURL=nuevaActividad.js;
+//#sourceURL=nuevaActividad.js;
 
 //Cargar select con un get y localstorage
 if(localStorage["tiposActividad"] != null){
@@ -21,6 +21,12 @@ function cargarOptions(datos){
         $("#tipoActividad")[0].appendChild(option);
     });
 }
+
+function cargarSelect(){
+    
+}
+
+
 $("#btnAnadirActividad").click(pulsarBtnAnadirActividad);
 
 function pulsarBtnAnadirActividad(){
