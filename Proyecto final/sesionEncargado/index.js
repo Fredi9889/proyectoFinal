@@ -10,10 +10,10 @@ if(sessionStorage.getItem("encargado") == null){
     window.open("../index.html", "_self");
 }
 
-
 $('a[href="../index.html"]').click(function(){
     sessionStorage.clear();
 });
+
 $("#actividades").click(actividades);
 $("#misDatos").click(misDatos);
 function actividades(){
@@ -72,7 +72,7 @@ function anadir(){
     }else{
         // Lo muestro si está oculto
         $('#formNuevaActividad').show("normal");
-        //$.getScript("../nuevaActividad/index.js");
+        $.getScript("../nuevaActividad/index.js");
     }
 }
     
@@ -217,8 +217,9 @@ function fModificar(oEvento){
             }else{
                 // Lo muestro si está oculto
                 $('#formModificarActividad').show("normal");
+                $.getScript("../modificarActividad/index.js");
                 //$("#formModificarActividad").reset();
-                $.ajax({
+                /*$.ajax({
                     url: "getActividadPorId.php",
                     method: "GET",
                     async: false,
@@ -232,7 +233,7 @@ function fModificar(oEvento){
                     $("#direccionActividad")[0].value = datos.lugar;
                     $("#fechaActividad")[0].value = datos.fecha;
                     $("#horaActividad")[0].value = datos.hora;
-                }
+                }*/
             }
         },
         data: { idAct: idAct},
