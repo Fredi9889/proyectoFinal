@@ -6,7 +6,7 @@ if(localStorage["tiposActividad"] != null){
     let datos = JSON.parse(localStorage["tiposActividad"]);
     cargarOptions(datos);
 }else{
-    $.get("../nuevaActividad/getTipo.php", respuestaAltaProfe, 'json');
+    $.get("getTipo.php", respuestaAltaProfe, 'json');
     function respuestaAltaProfe(datos){
         cargarOptions(datos);
         localStorage["tiposActividad"] = JSON.stringify(datos);
