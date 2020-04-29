@@ -1,6 +1,6 @@
 "use strict";
 //#sourceURL=nuevaActividad.js;
-
+nuevaActividadJS = true;
 //Cargar select con un get y localstorage
 if(localStorage["tiposActividad"] != null){
     let datos = JSON.parse(localStorage["tiposActividad"]);
