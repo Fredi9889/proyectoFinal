@@ -10,8 +10,8 @@ $password  = "";
 $dni = $_POST["dni"];
 $nombre = $_POST["nombre"];
 $apellidos = $_POST["apellidos"];
-$cuerpo = $_POST["cuerpo"];
-$email = $_POST["email"];
+$cuerpo = $_POST["idCuerpo"];
+$email = $_POST["mail"];
 $colegio = $_POST["colegio"];
 $contrasena = $_POST["contrasena"];
 
