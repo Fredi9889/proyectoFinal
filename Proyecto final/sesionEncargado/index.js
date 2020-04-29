@@ -9,7 +9,8 @@ $(document).ready(function () {
 if(sessionStorage.getItem("encargado") == null){
     window.open("../index.html", "_self");
 }
-
+var nuevaActividadJS = false;
+var modificarActividadJS = false;
 $('a[href="../index.html"]').click(function(){
     sessionStorage.clear();
 });
@@ -67,12 +68,16 @@ function anadir(){
     if ($('#formNuevaActividad').length == 0) {
         $("<div>").appendTo('#content').load("../nuevaActividad/index.html",
             function() {
-                $.getScript("../nuevaActividad/index.js");
+                if(!nuevaActividadJS){
+                    $.getScript("../nuevaActividad/index.js");
+                }
             });
     }else{
         // Lo muestro si está oculto
         $('#formNuevaActividad').show("normal");
-        $.getScript("../nuevaActividad/index.js");
+        $('#formNuevaActividad')[0].reset();
+        limpiarErrores();
+        //$.getScript("../nuevaActividad/index.js");
     }
 }
     
@@ -211,15 +216,18 @@ function fModificar(oEvento){
             if ($('#formModificarActividad').length == 0) {
                 $("<div>").appendTo('#content').load("../modificarActividad/index.html",
                     function() {
-                        $.getScript("../modificarActividad/index.js");
+                        if(!modificarActividadJS){
+                            $.getScript("../modificarActividad/index.js");
+
+                        }
                     });
                     //$("#formModificarActividad").reset();
             }else{
                 // Lo muestro si está oculto
                 $('#formModificarActividad').show("normal");
-                $.getScript("../modificarActividad/index.js");
+                //$.getScript("../modificarActividad/index.js");
                 //$("#formModificarActividad").reset();
-                /*$.ajax({
+                $.ajax({
                     url: "getActividadPorId.php",
                     method: "GET",
                     async: false,
@@ -228,12 +236,13 @@ function fModificar(oEvento){
                     dataType:'json'
                 });
                 function fDeRespuesta(datos){
-                    $("#nombreActividad")[0].value = datos.nombre;
-                    $("#tipoActividad")[0].value = datos.idTipo;
-                    $("#direccionActividad")[0].value = datos.lugar;
-                    $("#fechaActividad")[0].value = datos.fecha;
-                    $("#horaActividad")[0].value = datos.hora;
-                }*/
+                    $("#nombreActividad1")[0].value = datos.nombre;
+                    $("#tipoActividad1")[0].value = datos.idTipo;
+                    $("#direccionActividad1")[0].value = datos.lugar;
+                    $("#fechaActividad1")[0].value = datos.fecha;
+                    $("#horaActividad1")[0].value = datos.hora;
+                    limpiarErrores1();
+                }
             }
         },
         data: { idAct: idAct},
