@@ -6,6 +6,9 @@
 $("#registro").click(abrirRegistroProfe);
 $("#verActividades").click(verActividades);
 function verActividades(){
+    // Debería no hacer la llamada si ya se ha cargado previamente. Para eso hay qie modificar el codigo
+    // para que no borre las cartas, si no que las oculte. Si estan cargadas y ocultas, en vez de 
+    // hacer la llamada ajax, sería mas conveniente simplemente mostrarlo de nuevo.
     $.ajax({
         url: "sesionProfesor/getActividades.php",
         type: "get",
