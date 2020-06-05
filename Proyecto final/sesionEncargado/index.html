@@ -57,13 +57,13 @@
                 <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Listados</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         <li>
-                            <a href="#">Profesores por actividad</a>
+                            <a id="listPxA">Profesores por actividad</a>
                         </li>
                         <li>
-                            <a href="#">Actividades por tipo</a>
+                            <a id="listAxT">Actividades por tipo</a>
                         </li>
                         <li>
-                            <a href="#">Actividades por fecha</a>
+                            <a id="listAxF">Actividades por fecha</a>
                         </li>
                     </ul>
                 </li>
@@ -108,6 +108,61 @@
                     </div>
                 </div>-->          
             </div>
+            <div>
+                <!--Aquí van los formularios de los listados -->
+                <form style="margin-left: 100px; margin-right: auto; margin-top: -50px;" id="formFiltro">
+                    <div class="form-row">
+                      <div class="col-4">
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Tipo de actividad</div>
+                            </div>
+                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                            <option selected value="-1">Seleccione...</option>
+                          </select>
+                          </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Desde</div>
+                            </div>
+                        <input type="date" class="form-control"/>
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Hasta</div>
+                            </div>
+                        <input type="date" class="form-control"/>
+                      </div>
+                    </div>
+                    <div class="col-2">
+                        
+                        <input type="button" id="btnFiltrar" class="btn btn-primary mb-2" value="Filtrar"/>
+                      
+                    </div>
+                    </div>
+                </form>
+                
+                  <!--Listado -->
+            <table class="table" id="tablaListadoActividades" style="margin-right:100px; margin-top:50px ;">
+                <thead>
+                    <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Tipo de evento</th>
+                    <th scope="col">Lugar</th>
+                    <th scope="col">Fecha y hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+                  
+                
+            </div>
         
         </div>
     
@@ -117,7 +172,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>-->
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="index.js" language="javascript" type="text/javascript"></script>
 </body>
