@@ -20,7 +20,7 @@ $("#misDatos").click(misDatos);
 function actividades(){
     //Ocultar lo que haya por ahí
     $("form").hide("normal");
-    $("table").remove();
+    $("table").hide("normal");
     //Cagar las actividades
     $.ajax({
         url: "../sesionProfesor/getActividades.php",
@@ -277,6 +277,7 @@ function misDatos(){
     }
     $("form").hide("normal");
     $(".share").hide("normal");
+    $("table").hide("normal");
     //////////////
     //Creo la tabla con la información del encargado en cuestión si no se ha cargado ya
     if($("#tablaDatosEmpleado").length == 0){
@@ -313,6 +314,8 @@ function misDatos(){
     cuerpoT.appendChild(tr1);
     tabla.appendChild(cuerpoT);
     $("#content")[0].appendChild(tabla);
+    }else{
+        $("#tablaDatosEmpleado").show("normal");
     }
     
 
@@ -326,4 +329,87 @@ function misDatos(){
         // Lo muestro si está oculto
         $('#formMisDatos').show("normal");
     }*/
+}
+////
+// Listados:
+////
+$("#listPxA").click(listPxAPulsado);
+function listPxAPulsado(){
+    //Ocultar lo que haya por ahí
+    let cartas = document.querySelectorAll('.card-columns > *');
+    if(cartas.length > 0){
+        cartas.forEach(hijo=>{
+            hijo.remove();
+        });
+    }
+    $("form").hide("normal");
+    $(".share").hide("normal");
+    $("table").hide("normal");
+    if($("#tablaListadoActividades tbody > *").length != 0){
+        [].slice.call($("#tablaListadoActividades tbody > *")).forEach((el) => el.remove());
+    }
+    //Crear Options con otra llamada
+    $.ajax({
+        url: "../nuevaActividad/getTipo.php",
+        method: "GET",
+        async: true,
+        success: cargarOptions,
+        dataType:'json'
+    })
+    $.ajax({
+        url: "getActividades.php",
+        method: "GET",
+        async: false,
+        success: cargarTablaYFiltro,
+        dataType:'json'
+    })
+}
+function cargarOptions(datos){
+    let select = $("#inlineFormCustomSelect")[0];
+    datos.datos.forEach(o => {
+        let option = document.createElement("option");
+        option.value = o.idTipo;
+        option.textContent = o.nombre;
+        select.appendChild(option)
+    })
+}
+function cargarTablaYFiltro(datos){
+    //Crear cuerpo de tabla
+    let cuerpoTabla = $("#tablaListadoActividades tbody")[0];
+    datos.forEach(filaDatos => {
+        let fila = cuerpoTabla.insertRow(0);
+        fila.dataset.id = filaDatos.idAct;
+        fila.insertCell(0).textContent = filaDatos.nombreAct;
+        fila.insertCell(1).textContent = filaDatos.nombre;
+        fila.insertCell(2).textContent = filaDatos.lugar;
+        fila.insertCell(3).textContent = filaDatos.fecha + ", " + filaDatos.hora.substring(0,5);
+        let i = document.createElement("input");
+        i.type = "button";
+        i.classList.add("btn");
+        i.style.background = "#FAAC58";
+        i.style.color = "white";
+        i.value = "Consultar asistentes";
+        i.addEventListener("click", consultarAsistentesALaActividad);
+        fila.insertCell(4).appendChild(i);
+    
+    })
+    
+    $("#tablaListadoActividades").show("normal");
+    $("#formFiltro").show("normal");
+    
+    //Mostrarla cuando este todo creado
+}
+function consultarAsistentesALaActividad(oEvento){
+    var oE = oEvento || window.event;
+    $.ajax({
+        url: "getProfesPorActividad.php",
+        method: "GET",
+        async: false,
+        data: {idAct:oE.target.parentNode.parentNode.dataset.id},
+        success: pintarTablaProfes,
+        dataType:'json'
+    })
+}
+function pintarTablaProfes(datos){
+    console.log(datos)
 }
