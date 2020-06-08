@@ -21,6 +21,7 @@ function actividades(){
     //Ocultar lo que haya por ahí
     $("form").hide();
     $("table").hide();
+    $("h4").remove();
     //Cagar las actividades
     $.ajax({
         url: "../sesionProfesor/getActividades.php",
@@ -278,6 +279,7 @@ function misDatos(){
     $("form").hide();
     $(".share").hide();
     $("table").hide();
+    $("h4").remove();
     //////////////
     //Creo la tabla con la información del encargado en cuestión si no se ha cargado ya
     if($("#tablaDatosEmpleado").length == 0){
@@ -342,6 +344,7 @@ function listPxAPulsado(){
             hijo.remove();
         });
     }
+    $("h4").remove();
     $("form").hide();
     $(".share").hide();
     $("table").hide();
@@ -424,5 +427,36 @@ function pintarTablaProfes(datos){
             hijo.remove();
         });
     }
+    // Pintarlo todo, tabla etc...
+    // Asistentes a X actividad
+    // Pero sólo si la respuesta ha recibido algún dato
+    if(datos.length > 0){
+        let titulo = document.createElement("h4");
+        titulo.textContent = 'Datos de asistentes a la actividad  "' + datos[0].nombreAct + '"  con id "' + datos[0].idAct + '":';
+        $("#content")[0].prepend($("#sidebarCollapse")[0], titulo);
+        let cuerpoTabla = $("#tablaListadoProfesPorAct tbody")[0];
+        [].slice.call($("#tablaListadoProfesPorAct tbody > *")).forEach(el =>{el.remove()})
+        datos.forEach(filaDatos =>{
+            let fila = cuerpoTabla.insertRow(0);
+            fila.insertCell(0).textContent = filaDatos.dni;
+            fila.insertCell(1).textContent = filaDatos.nombreProf + " " + filaDatos.apellidos;
+            fila.insertCell(2).textContent = filaDatos.nombreCuerpo;
+            fila.insertCell(3).textContent = filaDatos.mail;
+            fila.insertCell(4).textContent = filaDatos.colegio;
+            if(filaDatos.confirmado == "1"){
+                fila.insertCell(5).textContent = "Confirmada";
+            }else{
+                fila.insertCell(5).textContent = "No confirmada";
+            }
+        })
+        $("#tablaListadoProfesPorAct").show("normal");
+    }else{
+        let titulo = document.createElement("h4");
+        titulo.style.marginTop = "30px";
+        titulo.textContent = 'La actividad  "' + datos.nombre + '"  con id  "' + datos.idAct + '"  no tiene ningún asistente';
+        $("#content")[0].prepend($("#sidebarCollapse")[0], titulo);
+    
+    }
+    
 
 }
