@@ -18,8 +18,14 @@ $arrayDatos = array();
 while($fila = mysqli_fetch_assoc($resultados)){
     $arrayDatos[] = $fila;
 }
+if(count($arrayDatos) == 0){
+    $sql1 = "SELECT a.idAct, a.nombre from actividad a where a.idAct = '".$idAct."'";
+    $resultado = mysqli_query($conexion,$sql1) or die(mysqli_error($conexion));
+    echo json_encode($f = mysqli_fetch_assoc($resultado));
+}else{
+    echo json_encode($arrayDatos);
+}
 
-echo json_encode($arrayDatos);
 
 mysqli_close($conexion);
 ?>
