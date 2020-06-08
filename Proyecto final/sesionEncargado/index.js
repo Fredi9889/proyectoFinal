@@ -19,8 +19,8 @@ $("#actividades").click(actividades);
 $("#misDatos").click(misDatos);
 function actividades(){
     //Ocultar lo que haya por ahí
-    $("form").hide("normal");
-    $("table").hide("normal");
+    $("form").hide();
+    $("table").hide();
     //Cagar las actividades
     $.ajax({
         url: "../sesionProfesor/getActividades.php",
@@ -61,8 +61,8 @@ function anadir(){
     }
     //Cargar el formulario
     // Oculto todos los formularios menos este
-    $("form:not('#formNuevaActividad')").hide("normal");
-    $(".share").hide("normal");
+    $("form:not('#formNuevaActividad')").hide();
+    $(".share").hide();
 
     // Verifico si ya he cargado el formulario antes
     if ($('#formNuevaActividad').length == 0) {
@@ -92,7 +92,7 @@ function respuestaVerActividades(datos){
             cartas.forEach(hijo=>{
                 hijo.remove();
             });
-            $(".share").hide("normal");
+            $(".share").hide();
        }else{
         $(".share").show("normal");
             /*let divBotonAnadir = document.createElement("div");
@@ -207,11 +207,11 @@ function fModificar(oEvento){
                 cartas.forEach(hijo=>{
                     hijo.remove();
                 });
-                $(".share").hide("normal");
+                $(".share").hide();
             }
             //Cargar el formulario
             // Oculto todos los formularios menos este
-            $("form:not('#formModificarActividad')").hide("normal");
+            $("form:not('#formModificarActividad')").hide();
             // Verifico si ya he cargado el formulario antes
             if ($('#formModificarActividad').length == 0) {
                 $("<div>").appendTo('#content').load("../modificarActividad/index.html",
@@ -275,9 +275,9 @@ function misDatos(){
             hijo.remove();
         });
     }
-    $("form").hide("normal");
-    $(".share").hide("normal");
-    $("table").hide("normal");
+    $("form").hide();
+    $(".share").hide();
+    $("table").hide();
     //////////////
     //Creo la tabla con la información del encargado en cuestión si no se ha cargado ya
     if($("#tablaDatosEmpleado").length == 0){
@@ -342,20 +342,24 @@ function listPxAPulsado(){
             hijo.remove();
         });
     }
-    $("form").hide("normal");
-    $(".share").hide("normal");
-    $("table").hide("normal");
+    $("form").hide();
+    $(".share").hide();
+    $("table").hide();
     if($("#tablaListadoActividades tbody > *").length != 0){
         [].slice.call($("#tablaListadoActividades tbody > *")).forEach((el) => el.remove());
     }
-    //Crear Options con otra llamada
-    $.ajax({
-        url: "../nuevaActividad/getTipo.php",
-        method: "GET",
-        async: true,
-        success: cargarOptions,
-        dataType:'json'
-    })
+    // Crear Options con otra llamada
+    // Sólo si no se han cargado ya
+    if($("#inlineFormCustomSelect > *").length < 2){
+        $.ajax({
+            url: "../nuevaActividad/getTipo.php",
+            method: "GET",
+            async: true,
+            success: cargarOptions,
+            dataType:'json'
+        })
+    }
+    
     $.ajax({
         url: "getActividades.php",
         method: "GET",
@@ -411,5 +415,14 @@ function consultarAsistentesALaActividad(oEvento){
     })
 }
 function pintarTablaProfes(datos){
-    console.log(datos)
+    //Ocultarlo todo y mostrar el listado con los profesores
+    $("table").hide();
+    $("form").hide();
+    let cartas = document.querySelectorAll('.card-columns > *');
+    if(cartas.length > 0){
+        cartas.forEach(hijo=>{
+            hijo.remove();
+        });
+    }
+
 }
