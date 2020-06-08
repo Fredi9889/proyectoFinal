@@ -82,7 +82,6 @@ function pulsarBtnAnadirActividad(){
         alert(mensajeError);
     }else{
         let hora = horaActividad + ":00";
-        console.log(fechaActividad);
         let oActividad = {
             nombreActividad:nombreActividad,
             tipoActividad:tipoActividad,
