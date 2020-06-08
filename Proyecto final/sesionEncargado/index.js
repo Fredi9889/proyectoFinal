@@ -345,23 +345,28 @@ function listPxAPulsado(){
         });
     }
     $("h4").remove();
-    $("form").hide();
+    $("form:not(#formFiltro)").hide();
     $(".share").hide();
-    $("table").hide();
+    $("table:not(#tablaListadoActividades)").hide();
     if($("#tablaListadoActividades tbody > *").length != 0){
         [].slice.call($("#tablaListadoActividades tbody > *")).forEach((el) => el.remove());
     }
+    // Reset de variables del formulario de filtro
+    $("#formFiltro")[0].reset();
     // Crear Options con otra llamada
     // Sólo si no se han cargado ya
     if($("#inlineFormCustomSelect > *").length < 2){
-        $.ajax({
-            url: "../nuevaActividad/getTipo.php",
-            method: "GET",
-            async: true,
-            success: cargarOptions,
-            dataType:'json'
-        })
+        if(localStorage["tiposActividad"] != null){
+            let datos = JSON.parse(localStorage["tiposActividad"]);
+            cargarOptionss(datos);
+        }else{
+            $.get("../nuevaActividad/getTipo.php", function(datos){
+                cargarOptionss(datos);
+                localStorage["tiposActividad"] = JSON.stringify(datos);
+            }, 'json');
+        }
     }
+
     
     $.ajax({
         url: "getActividades.php",
@@ -371,7 +376,7 @@ function listPxAPulsado(){
         dataType:'json'
     })
 }
-function cargarOptions(datos){
+function cargarOptionss(datos){
     let select = $("#inlineFormCustomSelect")[0];
     datos.datos.forEach(o => {
         let option = document.createElement("option");
@@ -459,4 +464,49 @@ function pintarTablaProfes(datos){
     }
     
 
+}
+$("#btnFiltrar").click(btnFiltrarPulsado)
+
+function btnFiltrarPulsado(){
+    let tipoAct = $("#inlineFormCustomSelect")[0].value;
+    let desde = $("#desde")[0].value;
+    let hasta = $("#hasta")[0].value;
+    if(desde == undefined){
+        desde = 0;
+    }
+    if(hasta == undefined){
+        hasta = 0;
+    }
+
+    $.ajax({
+        url: "getFiltrado.php",
+        method: "GET",
+        async: false,
+        data: {tipoAct:tipoAct, desde:desde, hasta:hasta},
+        success: sacarTablaFiltrada,
+        dataType:'json'
+    })
+}
+
+function sacarTablaFiltrada(datosFiltrados){
+    [].slice.call($("#tablaListadoActividades tbody > *")).forEach(el => el.remove());
+    let cuerpoTabla = $("#tablaListadoActividades tbody")[0];
+    datosFiltrados.forEach(filaDatos => {
+        let fila = cuerpoTabla.insertRow(0);
+        fila.dataset.id = filaDatos.idAct;
+        fila.insertCell(0).textContent = filaDatos.nombreAct;
+        fila.insertCell(1).textContent = filaDatos.nombre;
+        fila.insertCell(2).textContent = filaDatos.lugar;
+        fila.insertCell(3).textContent = filaDatos.fecha + ", " + filaDatos.hora.substring(0,5);
+        let i = document.createElement("input");
+        i.type = "button";
+        i.classList.add("btn");
+        i.style.background = "#FAAC58";
+        i.style.color = "white";
+        i.value = "Consultar asistentes";
+        i.addEventListener("click", consultarAsistentesALaActividad);
+        fila.insertCell(4).appendChild(i);
+    
+    })
+    
 }
