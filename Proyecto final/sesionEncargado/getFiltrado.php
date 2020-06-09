@@ -35,6 +35,9 @@ if($desde != 0 && $hasta != 0 && $tipoAct != -1){
 }else if($tipoAct != -1){
     $sql = "SELECT a.idAct, a.nombre as nombreAct, t.nombre, a.lugar, a.fecha, a.hora FROM actividad a INNER join tipoactividad t on t.idTipo = a.idTipo WHERE t.idTipo = '".$tipoAct."'";
     $resultado = mysqli_query($conexion,$sql);
+}else{
+    $sql = "SELECT a.idAct, a.nombre as nombreAct, t.nombre, a.lugar, a.fecha, a.hora FROM actividad a INNER join tipoactividad t on t.idTipo = a.idTipo";
+    $resultado = mysqli_query($conexion,$sql);
 }
 
 
