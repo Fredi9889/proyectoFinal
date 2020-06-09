@@ -36,13 +36,16 @@
         align-items: center;
       }
       .x{
-        margin-top: -31px;
+        height: 50px;
+        margin-top: -30px;
       }
       #volver1{
-        margin-left: 90%;
+        color:white;
         background-color: #FAAC58;
-        border: 0;
-        /*display: block;*/
+
+      }
+      .card-columns{
+        margin-top: 20px;
       }
     </style>
     <title>Home</title>
@@ -111,6 +114,46 @@
         
         </fieldset>
     </form>
+    <!--Filtro-->
+    <form style=" display: none; margin-top: 10px;" class="w-100 p-3" id="formFiltro1">
+      <div class="form-row">
+        <div class="col-3">
+          <div class="input-group mb-2 mr-sm-2">
+              <div class="input-group-prepend">
+                  <div class="input-group-text">Tipo de evento</div>
+              </div>
+          <select class="custom-select mr-sm-2" id="selecTipoEvento">
+              <option selected value="-1">Seleccione...</option>
+            </select>
+            </div>
+        </div>
+        <div class="col-3">
+          <div class="input-group mb-2 mr-sm-2">
+              <div class="input-group-prepend">
+                  <div class="input-group-text">Desde</div>
+              </div>
+          <input type="date" class="form-control" id="desde1" />
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="input-group mb-2 mr-sm-2">
+              <div class="input-group-prepend">
+                  <div class="input-group-text">Hasta</div>
+              </div>
+          <input type="date" class="form-control" id="hasta1" />
+        </div>
+      </div>
+      <div class="col-2">
+          
+          <input type="button" id="btnFiltrar2" class="btn btn-primary mb-2" value="Filtrar"/>
+        
+      </div>
+      <div class="col-1">
+        <input type="button" id="volver1" class="btn mb-2" onclick="fPulsarVolver()" value="Volver"/>
+      </div>
+
+      </div>
+  </form>
   </section>
   <script src="js/jquery.min.js"></script>
   <script src="js/index.js " language="javascript" type="text/javascript"></script>
