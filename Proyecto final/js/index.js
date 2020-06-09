@@ -25,14 +25,8 @@ function respuestaVA(datos){
     let otroDivMas = document.createElement("div");
     contenedor.appendChild(otroDivMas);
     otroDivMas.classList.add("x");
-
-    let boton = document.createElement("button");
-    boton.id = "volver1";
-    boton.classList.add("btn");
-    boton.classList.add("btn-danger");
-    boton.textContent ="Volver";
-    boton.addEventListener("click", fPulsarVolver);
-    otroDivMas.appendChild(boton);
+    otroDivMas.appendChild($("#formFiltro1")[0])
+    $("#formFiltro1").show("normal")
 
     let div = document.createElement("div");
     div.classList.add("card-columns");
@@ -213,8 +207,51 @@ function limpiarCampos(){
 }
 function fPulsarVolver(){
     let cartas = document.querySelector('.card-columns');
-    let btnVolver = document.querySelector('#volver1');
     cartas.remove();
-    btnVolver.remove();
+    $("#formFiltro1").hide();
     $("#login").show("normal");
+}
+$("#btnFiltrar2").click(fBtnFiltrar2Pulsado);
+
+function fBtnFiltrar2Pulsado(){
+    let tipoAct = $("#inlineFormCustomSelect")[0].value;
+    let desde = $("#desde")[0].value;
+    let hasta = $("#hasta")[0].value;
+    if(desde == undefined){
+        desde = 0;
+    }
+    if(hasta == undefined){
+        hasta = 0;
+    }
+
+    $.ajax({
+        url: "getFiltrado.php",
+        method: "GET",
+        async: false,
+        data: {tipoAct:tipoAct, desde:desde, hasta:hasta},
+        success: sacarTablaFiltrada2,
+        dataType:'json'
+    })
+}
+function sacarTablaFiltrada2(datosFiltrados){
+    [].slice.call($("#tablaListadoActividades tbody > *")).forEach(el => el.remove());
+    let cuerpoTabla = $("#tablaListadoActividades tbody")[0];
+    datosFiltrados.forEach(filaDatos => {
+        let fila = cuerpoTabla.insertRow(0);
+        fila.dataset.id = filaDatos.idAct;
+        fila.insertCell(0).textContent = filaDatos.nombreAct;
+        fila.insertCell(1).textContent = filaDatos.nombre;
+        fila.insertCell(2).textContent = filaDatos.lugar;
+        fila.insertCell(3).textContent = filaDatos.fecha + ", " + filaDatos.hora.substring(0,5);
+        let i = document.createElement("input");
+        i.type = "button";
+        i.classList.add("btn");
+        i.style.background = "#FAAC58";
+        i.style.color = "white";
+        i.value = "Consultar asistentes";
+        i.addEventListener("click", consultarAsistentesALaActividad);
+        fila.insertCell(4).appendChild(i);
+    
+    })
+    
 }
