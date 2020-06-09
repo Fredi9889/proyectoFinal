@@ -25,7 +25,14 @@ $("#misActividades").click(misActividades);
 $("#misDatos").click(misDatos);
 function verActividades(){
     //Ocultar lo que haya por ahí
-    $("form").hide("normal");
+    $("form:not(#formFiltro2)").hide("normal");
+    
+       //Si esta activado hay que borrar u ocultar las cartas
+    if($("#content")[0].querySelectorAll(".parrafo").length != 0){
+        $("#content")[0].querySelectorAll(".parrafo")[0].remove();
+    }
+    $("#selecTipo")[0].value = -1;
+    $("#selecFecha")[0].value = -1;
     //Cagar las actividades
     $.ajax({
         url: "getActividades.php",
@@ -55,16 +62,23 @@ function verActividades(){
 </div>*/
 
 function respuestaVerActividades(datos){
-        //Si esta activado hay que borrar u ocultar las cartas
-        if($("#content")[0].querySelectorAll(".parrafo").length != 0){
-            $("#content")[0].querySelectorAll(".parrafo")[0].remove();
-        }
-        let cartas = document.querySelectorAll('.card-columns > *');
+    let cartas = document.querySelectorAll('.card-columns > *');
         if(cartas.length > 0){
             cartas.forEach(hijo=>{
                 hijo.remove();
-            });
-       }else{
+            }); 
+       }
+        
+        
+        $("#formFiltro2").show("normal");
+           //Fecha actual
+           let fecha = new Date();
+           let dd = String(fecha.getDate()).padStart(2, '0');
+           let mm = String(fecha.getMonth() + 1).padStart(2, '0'); //January is 0!
+           let yyyy = fecha.getFullYear();
+           let hora = fecha.getHours() + ":" + fecha.getMinutes();
+           fecha = yyyy + '-' + mm + '-' + dd;
+           
             let contenedor = $(".card-columns")[0];
             datos.datos.forEach(element => {
                 let div1 = document.createElement("div");
@@ -73,6 +87,7 @@ function respuestaVerActividades(datos){
 
                 let div2 = document.createElement("div");
                 div2.classList.add("card");
+                div2.classList.add("h-100");
                 let imagen = document.createElement("img");
                 imagen.classList.add("img-fluid");
                 switch(element.idTipo){
@@ -129,65 +144,69 @@ function respuestaVerActividades(datos){
                 li3.classList.add("list-group-item");
                 li1.textContent = "Dirección: " + element.lugar;
                 li2.textContent = "Fecha: " + element.fecha;
-                li3.textContent = "Hora: " + element.hora.substring(0,5);
+                let horaAbrev = element.hora.substring(0,5)
+                li3.textContent = "Hora: " + horaAbrev;
 
-                let a = document.createElement("a");
-                a.classList.add("btn");
-                a.classList.add("btn-primary");
-                a.textContent = "Inscribirse";
-                a.classList.add("inscribirse");
-                a.dataset.idActividad = element.idAct;
                 ul.appendChild(li1);
                 ul.appendChild(li2);
                 ul.appendChild(li3);
                 div3.appendChild(ul);
                 div2.appendChild(div3);
                 div1.appendChild(div2);
-                div3.appendChild(a);
+
+                if(fecha > element.fecha || (fecha == element.fecha && hora >= horaAbrev)){
+                    $("<p style='color:red;'>Evento finalizado</p>").appendTo(div3);
+                }else{
+                    let a = document.createElement("a");
+                    a.classList.add("btn");
+                    a.classList.add("btn-primary");
+                    a.textContent = "Inscribirse";
+                    a.classList.add("inscribirse");
+                    a.dataset.idActividad = element.idAct;
+                    div3.appendChild(a);
+                }
+                
+                
                 contenedor.appendChild(div1);
             });
             let btnInscribirse = document.querySelectorAll('.inscribirse');
             btnInscribirse.forEach(boton=>{
                 boton.addEventListener("click", fInscribirse);
             });
-        
-       }
+}
 function fInscribirse(oEvento){
     var oE = oEvento || window.event;
     //Hacer un post enviando el dni del profesor y el id de la actividad
     let idAct = oE.target.dataset.idActividad;
     let datosProfe = JSON.parse(sessionStorage.getItem("profesor"));
-    $.ajax({
-        url: "postInscripcion.php",
-        method: "POST",
-        async: true,
-        success: function(datos){
-            alert(datos.mensaje);
-            if(datos.datos != undefined){
-                $(".badge-light")[0].textContent = datos.datos;
-            }
-        },
-        data: { idAct: idAct,
-                dniProfe: datosProfe.dni
+    let fecha = oE.target.parentNode.querySelectorAll("li")[1].textContent.substring(7);
+    //Fecha
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    if(today >= fecha){
+        alert("El evento ya ha sido finalizado");
+    }else{
+        $.ajax({
+            url: "postInscripcion.php",
+            method: "POST",
+            async: true,
+            success: function(datos){
+                alert(datos.mensaje);
+                if(datos.datos != undefined){
+                    $(".badge-light")[0].textContent = datos.datos;
+                }
             },
-        dataType : 'json'
-    });
-}
-
-
-
-/*function respuestaInsertInscripcion(datos){
-    alert(datos.mensaje);
-}*/
+            data: { idAct: idAct,
+                    dniProfe: datosProfe.dni
+                },
+            dataType : 'json'
+        });
+    }
     
-    /*$( ".inscribirse" ).hover(
-        function() {
-            console.log($(this));
-          $(this).addClass("shadow");
-        }, function() {
-          $( this ).removeClass("shadow");
-        }
-      );*/
+    
 }
 function misActividades(){
     //Ocultar lo que haya por ahí
@@ -212,122 +231,122 @@ function respuestaMisActividades(datos){
         cartas.forEach(hijo=>{
             hijo.remove();
         });
+    }
+    if(datos.datos.length == 0){
+        let p = document.createElement("p");
+        p.classList.add("parrafo");
+        p.textContent = "No te has inscrito aun en ninguna actividad";
+        if($("#content")[0].querySelectorAll(".parrafo").length == 0){
+            $("#content")[0].appendChild(p);
+        }
     }else{
-        if(datos.datos.length == 0){
+        let contenedor = $(".card-columns")[0];
+        datos.datos.forEach(element => {
+            let div1 = document.createElement("div");
+            div1.classList.add("col");
+            div1.classList.add("mb-4");
+
+            let div2 = document.createElement("div");
+            div2.classList.add("card");
+            div2.classList.add("h-100");
+            if(element.confirmado == 1){
+                div2.classList.add("confirmado");
+            }
+            let imagen = document.createElement("img");
+            imagen.classList.add("img-fluid");
+            switch(element.idTipo){
+                case "1":
+                    imagen.setAttribute("src", "../img/Conferencia.jpg");
+                    break;
+                case "2":
+                    imagen.setAttribute("src", "../img/Seminario.jpg");
+                    break;
+                case "3":
+                    imagen.setAttribute("src", "../img/mesaTrabajo.jpg");
+                    break;
+                case "4":
+                    imagen.setAttribute("src", "../img/exposicion.jpg");
+                    break;
+            }
+            //Ajustar el tamaño de imagen
+            div2.appendChild(imagen);
+
+            let div3 = document.createElement("div");
+            div3.classList.add("card-body");
+
+            let h5 = document.createElement("h5");
+            h5.textContent = element.nombre;
+            div3.appendChild(h5);
+
             let p = document.createElement("p");
-            p.classList.add("parrafo");
-            p.textContent = "No te has inscrito aun en ninguna actividad";
-            if($("#content")[0].querySelectorAll(".parrafo").length == 0){
-                $("#content")[0].appendChild(p);
+            switch(element.idTipo){
+                case "1":
+                    p.textContent = "Conferencia";
+                    break;
+                case "2":
+                    p.textContent = "Seminario";
+                    break;
+                case "3":
+                    p.textContent = "Mesa de trabajo";
+                    break;
+                case "4":
+                    p.textContent = "Exposición";
+                    break;
+            }
+            div3.appendChild(p);
+
+            let ul = document.createElement("ul");
+            ul.classList.add("list-group");
+            ul.classList.add("list-group-flush");
+
+
+            let li1 = document.createElement("li");
+            let li2 = document.createElement("li");
+            let li3 = document.createElement("li");
+            li1.classList.add("list-group-item");
+            li2.classList.add("list-group-item");
+            li3.classList.add("list-group-item");
+            li1.textContent = "Dirección: " + element.lugar;
+            li2.textContent = "Fecha: " + element.fecha;
+            li3.textContent = "Hora: " + element.hora.substring(0,5);
+            if(element.confirmado == 1){
+                li1.classList.add("confirmado");
+                li2.classList.add("confirmado");
+                li3.classList.add("confirmado");
+            }
+            if(element.confirmado == 0){
+                var a = document.createElement("a");
+                a.classList.add("btn");
+                a.classList.add("btn-success");
+                a.textContent = "Confirmar asistencia";
+                a.classList.add("inscribirse");
+                a.dataset.idActividad = element.idAct;
+
+                var a2 = document.createElement("a");
+                a2.classList.add("btn");
+                a2.classList.add("btn-danger");
+                a2.textContent = "Cancelar inscripción";
+                a2.classList.add("cancelarInscripcion");
+                a2.dataset.idActividad = element.idAct;
+
+                
             }
             
-        }else{
-            let contenedor = $(".card-columns")[0];
-            datos.datos.forEach(element => {
-                let div1 = document.createElement("div");
-                div1.classList.add("col");
-                div1.classList.add("mb-4");
 
-                let div2 = document.createElement("div");
-                div2.classList.add("card");
-                if(element.confirmado == 1){
-                    div2.classList.add("confirmado");
-                }
-                let imagen = document.createElement("img");
-                imagen.classList.add("img-fluid");
-                switch(element.idTipo){
-                    case "1":
-                        imagen.setAttribute("src", "../img/Conferencia.jpg");
-                        break;
-                    case "2":
-                        imagen.setAttribute("src", "../img/Seminario.jpg");
-                        break;
-                    case "3":
-                        imagen.setAttribute("src", "../img/mesaTrabajo.jpg");
-                        break;
-                    case "4":
-                        imagen.setAttribute("src", "../img/exposicion.jpg");
-                        break;
-                }
-                //Ajustar el tamaño de imagen
-                div2.appendChild(imagen);
+            ul.appendChild(li1);
+            ul.appendChild(li2);
+            ul.appendChild(li3);
+            div3.appendChild(ul);
+            if(element.confirmado == 0){
+                div3.appendChild(a);
+                div3.appendChild(a2);
+            }
+            div2.appendChild(div3);
+            div1.appendChild(div2);
 
-                let div3 = document.createElement("div");
-                div3.classList.add("card-body");
-
-                let h5 = document.createElement("h5");
-                h5.textContent = element.nombre;
-                div3.appendChild(h5);
-
-                let p = document.createElement("p");
-                switch(element.idTipo){
-                    case "1":
-                        p.textContent = "Conferencia";
-                        break;
-                    case "2":
-                        p.textContent = "Seminario";
-                        break;
-                    case "3":
-                        p.textContent = "Mesa de trabajo";
-                        break;
-                    case "4":
-                        p.textContent = "Exposición";
-                        break;
-                }
-                div3.appendChild(p);
-
-                let ul = document.createElement("ul");
-                ul.classList.add("list-group");
-                ul.classList.add("list-group-flush");
-
-
-                let li1 = document.createElement("li");
-                let li2 = document.createElement("li");
-                let li3 = document.createElement("li");
-                li1.classList.add("list-group-item");
-                li2.classList.add("list-group-item");
-                li3.classList.add("list-group-item");
-                li1.textContent = "Dirección: " + element.lugar;
-                li2.textContent = "Fecha: " + element.fecha;
-                li3.textContent = "Hora: " + element.hora.substring(0,5);
-                if(element.confirmado == 1){
-                    li1.classList.add("confirmado");
-                    li2.classList.add("confirmado");
-                    li3.classList.add("confirmado");
-                }
-                if(element.confirmado == 0){
-                    var a = document.createElement("a");
-                    a.classList.add("btn");
-                    a.classList.add("btn-success");
-                    a.textContent = "Confirmar asistencia";
-                    a.classList.add("inscribirse");
-                    a.dataset.idActividad = element.idAct;
-
-                    var a2 = document.createElement("a");
-                    a2.classList.add("btn");
-                    a2.classList.add("btn-danger");
-                    a2.textContent = "Cancelar inscripción";
-                    a2.classList.add("cancelarInscripcion");
-                    a2.dataset.idActividad = element.idAct;
-
-                    
-                }
-                
-
-                ul.appendChild(li1);
-                ul.appendChild(li2);
-                ul.appendChild(li3);
-                div3.appendChild(ul);
-                if(element.confirmado == 0){
-                    div3.appendChild(a);
-                    div3.appendChild(a2);
-                }
-                div2.appendChild(div3);
-                div1.appendChild(div2);
-
-                contenedor.appendChild(div1);
-            });
-        }
+            contenedor.appendChild(div1);
+        });
+    }
         
         let btnInscribirse = document.querySelectorAll('.inscribirse');
         btnInscribirse.forEach(boton=>{
@@ -337,7 +356,7 @@ function respuestaMisActividades(datos){
         btnCancelar.forEach(boton=>{
             boton.addEventListener("click", fCancelarInscripcion);
         });
-    }
+    
 }
 function fConfirmarAsistencia(oEvento){
     var oE = oEvento || window.event;
@@ -416,3 +435,38 @@ function misDatos(){
         $('#formMisDatos').show("normal");
     }
 }
+//Cargar los options del local storage o haciendo una llamada ajax
+if($("#selecTipo > *").length < 2){
+    if(localStorage["tiposActividad"] != null){
+        let datos = JSON.parse(localStorage["tiposActividad"]);
+        cargarOptionsss(datos);
+    }else{
+        $.get("../nuevaActividad/getTipo.php", function(datos){
+            cargarOptionsss(datos);
+            localStorage["tiposActividad"] = JSON.stringify(datos);
+        }, 'json');
+    }
+}
+function cargarOptionsss(datos){
+    let select = $("#selecTipo")[0];
+    datos.datos.forEach(o => {
+        let option = document.createElement("option");
+        option.value = o.idTipo;
+        option.textContent = o.nombre;
+        select.appendChild(option)
+    })
+}
+$("#selecTipo").change(function(){
+    let tipo = $("#selecTipo")[0].value;
+    let fechaModo = $("#selecFecha")[0].value;
+    
+        $.get("getActividadesFiltrado.php", {tipoAct:tipo, fecha:fechaModo}, respuestaVerActividades,"json");
+    
+})
+$("#selecFecha").change(function(){
+    let tipo = $("#selecTipo")[0].value;
+    let fechaModo = $("#selecFecha")[0].value;
+    
+        $.get("getActividadesFiltrado.php", {tipoAct:tipo, fecha:fechaModo}, respuestaVerActividades,"json");
+    
+})
