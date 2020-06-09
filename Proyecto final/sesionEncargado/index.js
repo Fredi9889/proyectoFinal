@@ -177,6 +177,12 @@ function respuestaVerActividades(datos){
                 a.textContent = "Modificar actividad";
                 a.classList.add("inscribirse");
                 a.dataset.idActividad = element.idAct;
+                let a2 = document.createElement("a");
+                a2.classList.add("btn");
+                a2.classList.add("btn-danger");
+                a2.classList.add("delete");
+                a2.textContent = "Eliminar actividad";
+                a2.dataset.idActividad = element.idAct;
                 ul.appendChild(li1);
                 ul.appendChild(li2);
                 ul.appendChild(li3);
@@ -184,16 +190,37 @@ function respuestaVerActividades(datos){
                 div2.appendChild(div3);
                 div1.appendChild(div2);
                 div3.appendChild(a);
+                div3.appendChild(a2);
                 contenedor.appendChild(div1);
             });
             let btnInscribirse = document.querySelectorAll('.inscribirse');
             btnInscribirse.forEach(boton=>{
                 boton.addEventListener("click", fModificar);
             });
+            let btnDelete = document.querySelectorAll('.delete');
+            btnDelete.forEach(boton=>{
+                boton.addEventListener("click", fDelete);
+            });
         
        }
+function fDelete(oEvento){
+    //Requiere confirmación
+    let oE = oEvento || window.event;
+    //Id de actividad
+    let idAct = oE.target.dataset.idActividad;
+    let confirmacion = window.confirm("Debe tener cuidado ya que puede dejar a algunos usuarios sin su actividad.\n ¿Está seguro de querer eliminar la activiadd con id: "+idAct+" ?");
+    if(confirmacion){
+        $.post("delete.php", {idAct:idAct}, function(datosRespuesta){
+            if(datosRespuesta.error == 0){
+                alert(datosRespuesta.mensaje);
+                oE.target.parentNode.parentNode.parentNode.remove();
+            }
+            
+        },'json');
+    }
+}
 function fModificar(oEvento){
-    var oE = oEvento || window.event;
+    let oE = oEvento || window.event;
     //Id de actividad
     let idAct = oE.target.dataset.idActividad;
     $.ajax({
@@ -335,7 +362,8 @@ function misDatos(){
 ////
 // Listados:
 ////
-$("#listPxA").click(listPxAPulsado);
+$("#listPxA, #listAxT, #listAxF").click(listPxAPulsado)
+
 function listPxAPulsado(){
     //Ocultar lo que haya por ahí
     let cartas = document.querySelectorAll('.card-columns > *');
