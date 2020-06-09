@@ -74,6 +74,32 @@
                 <span></span>
                 <span></span>
             </button>
+            <form style="margin-left: 0px; margin-right: auto; margin-top: 0px; display: none;" id="formFiltro2">
+                <div class="form-row">
+                  <div class="col-6">
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">Filtrar por tipo</div>
+                        </div>
+                    <select class="custom-select mr-sm-2" id="selecTipo">
+                        <option selected value="-1">Seleccione...</option>
+                      </select>
+                      </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="input-group mb-2 mr-sm-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">Ordenar por fecha</div>
+                        </div>
+                    <select class="custom-select mr-sm-2" id="selecFecha">
+                        <option selected value="-1">Seleccione...</option>
+                        <option value="1">Ascendente</option>
+                        <option value="2">Descendente</option>
+                      </select>
+                      </div>
+                  </div>
+                </div>
+            </form>
             <div class="card-columns">
                 <!--<div class="col mb-4">
                     <div class="card">
@@ -93,7 +119,7 @@
             </div>
         
         </div>
-    
+    </div>
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <!-- Popper.JS -->
