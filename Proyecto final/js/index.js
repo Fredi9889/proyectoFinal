@@ -6,9 +6,14 @@
 $("#registro").click(abrirRegistroProfe);
 $("#verActividades").click(verActividades);
 function verActividades(){
-    // Debería no hacer la llamada si ya se ha cargado previamente. Para eso hay qie modificar el codigo
+    // Debería no hacer la llamada si ya se ha cargado previamente. Para eso hay que modificar el codigo
     // para que no borre las cartas, si no que las oculte. Si estan cargadas y ocultas, en vez de 
     // hacer la llamada ajax, sería mas conveniente simplemente mostrarlo de nuevo.
+    if($(".x").length > 1){
+        for(let i = 0 ; i <= $(".x").length-1 ; i++){
+            [].slice.call($(".x"))[i].remove();
+        }
+    }
     $.ajax({
         url: "sesionProfesor/getActividades.php",
         type: "get",
@@ -17,6 +22,18 @@ function verActividades(){
         dataType: "json",
         success: respuestaVA
     });
+    //Cargar options
+if($("#selecTipoEvento > *").length < 2){
+    if(localStorage["tiposActividad"] != null){
+        let datos = JSON.parse(localStorage["tiposActividad"]);
+        cargarOptionssss(datos);
+    }else{
+        $.get("nuevaActividad/getTipo.php", function(datos){
+            cargarOptionssss(datos);
+            localStorage["tiposActividad"] = JSON.stringify(datos);
+        }, 'json');
+    }
+}
 
 }
 function respuestaVA(datos){
@@ -214,9 +231,13 @@ function fPulsarVolver(){
 $("#btnFiltrar2").click(fBtnFiltrar2Pulsado);
 
 function fBtnFiltrar2Pulsado(){
-    let tipoAct = $("#inlineFormCustomSelect")[0].value;
-    let desde = $("#desde")[0].value;
-    let hasta = $("#hasta")[0].value;
+    let cartas = document.querySelector('.card-columns');
+    if(cartas != null){
+        cartas.remove();
+    }
+    let tipoAct = $("#selecTipoEvento")[0].value;
+    let desde = $("#desde1")[0].value;
+    let hasta = $("#hasta1")[0].value;
     if(desde == undefined){
         desde = 0;
     }
@@ -225,33 +246,21 @@ function fBtnFiltrar2Pulsado(){
     }
 
     $.ajax({
-        url: "getFiltrado.php",
+        url: "php/actividadesFiltradas.php",
         method: "GET",
         async: false,
         data: {tipoAct:tipoAct, desde:desde, hasta:hasta},
-        success: sacarTablaFiltrada2,
+        success: respuestaVA,
         dataType:'json'
     })
 }
-function sacarTablaFiltrada2(datosFiltrados){
-    [].slice.call($("#tablaListadoActividades tbody > *")).forEach(el => el.remove());
-    let cuerpoTabla = $("#tablaListadoActividades tbody")[0];
-    datosFiltrados.forEach(filaDatos => {
-        let fila = cuerpoTabla.insertRow(0);
-        fila.dataset.id = filaDatos.idAct;
-        fila.insertCell(0).textContent = filaDatos.nombreAct;
-        fila.insertCell(1).textContent = filaDatos.nombre;
-        fila.insertCell(2).textContent = filaDatos.lugar;
-        fila.insertCell(3).textContent = filaDatos.fecha + ", " + filaDatos.hora.substring(0,5);
-        let i = document.createElement("input");
-        i.type = "button";
-        i.classList.add("btn");
-        i.style.background = "#FAAC58";
-        i.style.color = "white";
-        i.value = "Consultar asistentes";
-        i.addEventListener("click", consultarAsistentesALaActividad);
-        fila.insertCell(4).appendChild(i);
-    
+
+function cargarOptionssss(datos){
+    let select = $("#selecTipoEvento")[0];
+    datos.datos.forEach(o => {
+        let option = document.createElement("option");
+        option.value = o.idTipo;
+        option.textContent = o.nombre;
+        select.appendChild(option)
     })
-    
 }
