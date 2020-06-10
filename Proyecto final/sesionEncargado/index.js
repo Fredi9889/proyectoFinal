@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
@@ -538,3 +539,9 @@ function sacarTablaFiltrada(datosFiltrados){
     })
     
 }
+
+    var doc = new jsPDF();
+    doc.text("Hello world", 10, 10);
+    doc.save('pdf.pdf')
+
+
