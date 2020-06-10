@@ -540,8 +540,8 @@ function sacarTablaFiltrada(datosFiltrados){
     
 }
 
-    var doc = new jsPDF();
-    doc.text("Hello world", 10, 10);
-    doc.save('pdf.pdf')
+var doc = new jsPDF();
+doc.text("Hello world", 10, 10);
+doc.save('pdf.pdf')
 
 
