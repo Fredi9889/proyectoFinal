@@ -89,6 +89,7 @@ function respuestaVerActividades(datos){
         /*if($("#content")[0].querySelectorAll(".parrafo").length != 0){
             $("#content")[0].querySelectorAll(".parrafo")[0].remove();
         }*/
+        $("#botonDescargarPdf").hide();
         let cartas = document.querySelectorAll('.card-columns > *');
         if(cartas.length > 0){
             cartas.forEach(hijo=>{
@@ -298,6 +299,7 @@ function fModificar(oEvento){
 function misDatos(){
     //Ver los datos del encargado
     //Ocultar lo que haya por ahí
+    $("#botonDescargarPdf").hide();
     let cartas = document.querySelectorAll('.card-columns > *');
     if(cartas.length > 0){
         cartas.forEach(hijo=>{
@@ -367,6 +369,7 @@ $("#listPxA, #listAxT, #listAxF").click(listPxAPulsado)
 
 function listPxAPulsado(){
     //Ocultar lo que haya por ahí
+    $("#botonDescargarPdf").hide();
     let cartas = document.querySelectorAll('.card-columns > *');
     if(cartas.length > 0){
         cartas.forEach(hijo=>{
@@ -465,9 +468,20 @@ function pintarTablaProfes(datos){
     // Asistentes a X actividad
     // Pero sólo si la respuesta ha recibido algún dato
     if(datos.length > 0){
+        let boton = document.createElement("input");
+        boton.classList.add("btn");
+        boton.style.marginTop = "50px"
+        boton.type ="button";
+        boton.value = "Descargar tabla en PDF";
+        boton.id ="botonDescargarPdf";
+        boton.addEventListener("click", btnPDFProfes);
+        let div = document.createElement("div");
+        div.id = "divPDF";
         let titulo = document.createElement("h4");
         titulo.textContent = 'Datos de asistentes a la actividad  "' + datos[0].nombreAct + '"  con id "' + datos[0].idAct + '":';
+        $("#content")[0].prepend(titulo, boton);
         $("#content")[0].prepend($("#sidebarCollapse")[0], titulo);
+        
         let cuerpoTabla = $("#tablaListadoProfesPorAct tbody")[0];
         [].slice.call($("#tablaListadoProfesPorAct tbody > *")).forEach(el =>{el.remove()})
         datos.forEach(filaDatos =>{
@@ -483,6 +497,9 @@ function pintarTablaProfes(datos){
                 fila.insertCell(5).textContent = "No confirmada";
             }
         })
+        $("#content")[0].appendChild(div);
+        div.appendChild(titulo);
+        div.appendChild($("#tablaListadoProfesPorAct")[0]);
         $("#tablaListadoProfesPorAct").show("normal");
     }else{
         let titulo = document.createElement("h4");
@@ -494,6 +511,28 @@ function pintarTablaProfes(datos){
     
 
 }
+function btnPDFProfes(){
+    $("#divPDF")[0].style.width= "1000px";
+    $("#divPDF")[0].style.padding= "20px";
+    html2canvas($("#divPDF")[0]).then(
+        function(canvas){
+            let imagen = canvas.toDataURL("image/png")
+            let doc = new jsPDF({
+                orientation: 'landscape'
+            })
+            doc.addImage(imagen, 'PNG', 10, 20)
+            //doc.text(5, 5, 'Listado de profesores actividades');
+            /*doc.text(13, 15, "Nombre");
+            doc.text(123, 15, "Tipo de evento");
+            doc.text(175, 15, "Lugar");
+            doc.text(242, 15, "Fecha y hora");*/
+            doc.save('listadoProfesoresPorActividad.pdf')
+            //tabla.remove();
+            //$("#divPDF")[0].style.width= "";
+            //$("#divPDF")[0].style.padding= "";
+        })
+}
+
 $("#btnFiltrar").click(btnFiltrarPulsado)
 
 function btnFiltrarPulsado(){
@@ -540,8 +579,66 @@ function sacarTablaFiltrada(datosFiltrados){
     
 }
 
-var doc = new jsPDF();
-doc.text("Hello world", 10, 10);
-doc.save('pdf.pdf')
+$("#sacarPdfActividades").click(function(){
+    //let tabla = $("#tablaListadoActividades:not(#sidebar,#sidebarCollapse, #formFiltro, #tablaListadoActividades input)")[0];
+    let tabla = document.createElement("table");
+    tabla.classList.add("table");
+    tabla.style.width = "950px";
+    tabla.style.marginTop = "2000px";
+    tabla.id = "tablaListadoPDF";
+    let thead = document.createElement("thead");
+    let tr = document.createElement("tr");
+    thead.appendChild(tr);
+    
+    let arrayTH = [].slice.call($("#tablaListadoActividades thead tr th:not(:last-child)"));
+    arrayTH.forEach(thx =>{
+        let th = document.createElement("th");
+        th.scope = "col";
+        th.textContent = thx.textContent;
+        tr.appendChild(th);
+    })
+
+    let tbody = document.createElement("tbody");
+    let arrayTR = [].slice.call($("#tablaListadoActividades tbody tr"));
+
+    arrayTR.forEach(el =>{
+        let tr = document.createElement("tr");
+        [].slice.call(el.querySelectorAll("td")).forEach(tdx =>{
+            let td = document.createElement("td");
+            td.textContent = tdx.textContent;
+            tr.appendChild(td);
+        })
+        tbody.appendChild(tr);
+    })
+
+    
+    
+    tabla.appendChild(thead);
+    tabla.appendChild(tbody);
+
+    document.body.appendChild(tabla)
+    html2canvas(tabla).then(
+        function(canvas){
+            let imagen = canvas.toDataURL("image/png")
+            let doc = new jsPDF({
+                orientation: 'landscape'
+            })
+            doc.addImage(imagen, 'PNG', 10, 25)
+            doc.text(5, 5, 'Listado de actividades');
+            /*doc.text(13, 15, "Nombre");
+            doc.text(123, 15, "Tipo de evento");
+            doc.text(175, 15, "Lugar");
+            doc.text(242, 15, "Fecha y hora");*/
+            doc.save('listadoActividades.pdf')
+            tabla.remove();
+        })
+        
+    
+    
+    //doc.fromHTML($("#tablaListadoActividades")[0])
+    
+})
+
+
 
 
