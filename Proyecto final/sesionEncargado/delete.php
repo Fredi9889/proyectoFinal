@@ -1,9 +1,9 @@
 <?php
 // Configuración BASE DE DATOS MYSQL
-$servidor  = "localhost";
-$basedatos = "eventos";
-$usuario   = "root";
-$password  = "";
+$servidor  = "sql103.epizy.com";
+$basedatos = "epiz_25994339_eventos";
+$usuario   = "epiz_25994339";
+$password  = "05JSwZTZooLLw";
 
 $idAct = $_POST["idAct"];
 // Creamos la conexión al servidor.
